@@ -9,7 +9,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class TalkBoxSimulator extends JFrame implements ActionListener {
-	private String names[] = {"Happy", "Sad", "Bored", "Angry", "Excited"};
+	private String names[] = {" ", " ", " ", " ", " "};
 	private JButton controls[];
 	
 	public static void main(String[] args) {
@@ -19,6 +19,19 @@ public class TalkBoxSimulator extends JFrame implements ActionListener {
 	
 	public TalkBoxSimulator() {
 		Container container = getContentPane();
+		JPanel headers = new JPanel();
+		headers.setLayout(new GridLayout(1,5));
+		JLabel h1 = new JLabel("Happy", SwingConstants.CENTER);
+		JLabel h2 = new JLabel("Sad", SwingConstants.CENTER);
+		JLabel h3 = new JLabel("Bored", SwingConstants.CENTER);
+		JLabel h4 = new JLabel("Angry", SwingConstants.CENTER);
+		JLabel h5 = new JLabel("Excited", SwingConstants.CENTER);
+		headers.add(h1);
+		headers.add(h2);
+		headers.add(h3);
+		headers.add(h4);
+		headers.add(h5);
+		container.add(headers, BorderLayout.PAGE_START);
 		JPanel sim = new JPanel();
 		sim.setLayout(new GridLayout(2,5));
 		JLabel i1 = new JLabel(new ImageIcon("happy.png"));
@@ -46,8 +59,6 @@ public class TalkBoxSimulator extends JFrame implements ActionListener {
 		this.setSize(((int)(screensize.width * 0.8)),((int) (screensize.height * 0.8)));
 		this.setLocation(((int)(screensize.width * 0.1)),((int) (screensize.height * 0.1)));
 		this.setVisible(true);
-		
-		
 	}
 	
 	public void playSound(String clipName) {
