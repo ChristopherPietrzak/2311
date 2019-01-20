@@ -16,6 +16,8 @@ public class TalkBoxSimulator extends JFrame
 					
 	}
 	
+	private TalkBoxDataObject config_info; 
+	
 	public TalkBoxSimulator()
 	{
 		
