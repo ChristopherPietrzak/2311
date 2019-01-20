@@ -9,9 +9,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class TalkBoxSimulator extends JFrame implements ActionListener {
-	private String names[] = {"Happy", "Sad", "Bored", "Frustrated", "Excited"};
+	private String names[] = {"Happy", "Sad", "Bored", "Angry", "Excited"};
 	private JButton controls[];
-	private JLabel i1, i2, i3, i4, i5;
 	
 	public static void main(String[] args) {
 		TalkBoxSimulator simDemo = new TalkBoxSimulator();
@@ -20,28 +19,25 @@ public class TalkBoxSimulator extends JFrame implements ActionListener {
 	
 	public TalkBoxSimulator() {
 		Container container = getContentPane();
-		JPanel icons = new JPanel();
-		icons.setLayout(new GridLayout(1,5));
-		i1.setIcon(new ImageIcon("happy.png"));
-		i2.setIcon(new ImageIcon("sad.png"));
-		i3.setIcon(new ImageIcon("bored.png"));
-		i4.setIcon(new ImageIcon("angry.png"));
-		i5.setIcon(new ImageIcon("excited.png"));
-		icons.add(i1);
-		icons.add(i2);
-		icons.add(i3);
-		icons.add(i4);
-		icons.add(i5);
-		container.add(icons);
-		JPanel buttons = new JPanel();
-		buttons.setLayout(new GridLayout(1,5));
+		JPanel sim = new JPanel();
+		sim.setLayout(new GridLayout(2,5));
+		JLabel i1 = new JLabel(new ImageIcon("happy.png"));
+		JLabel i2 = new JLabel(new ImageIcon("sad.png"));
+		JLabel i3 = new JLabel(new ImageIcon("bored.png"));
+		JLabel i4 = new JLabel(new ImageIcon("angry.png"));
+		JLabel i5 = new JLabel(new ImageIcon("excited.png"));
+		sim.add(i1);
+		sim.add(i2);
+		sim.add(i3);
+		sim.add(i4);
+		sim.add(i5);
 		controls = new JButton[names.length];
 		for (int counter = 0; counter < controls.length; counter++) {
 			controls[counter] = new JButton(names[counter]);
 			controls[counter].addActionListener(this);
-			buttons.add(controls[counter]);
+			sim.add(controls[counter]);
 		}
-		container.add(buttons);
+		container.add(sim);
 		
 		Toolkit tk =  Toolkit.getDefaultToolkit();
 		
@@ -65,11 +61,18 @@ public class TalkBoxSimulator extends JFrame implements ActionListener {
 		}
 	}
 	
+	// replace .mp3 files with whatever sound file is appropriate
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == controls[0]) {
-			
+			playSound("I'm feeling happy.wav");
+		} else if (event.getSource() == controls[1]) {
+			playSound("I'm feeling sad.wav");
+		} else if (event.getSource() == controls[2]) {
+			playSound("I'm feeling bored.wav");
+		} else if (event.getSource() == controls[3]) {
+			playSound("I'm feeling angry.wav");
+		} else if (event.getSource() == controls[4]) {
+			playSound("I'm feeling excited.wav");
 		}
 	}
-	
-
 }
