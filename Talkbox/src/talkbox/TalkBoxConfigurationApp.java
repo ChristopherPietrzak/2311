@@ -97,7 +97,6 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		if(eve.getSource() == j_active_presets)
 		{
 			remove_index = j_active_presets.getSelectedIndex();
-			int i = 7;
 		}
 		
 		
