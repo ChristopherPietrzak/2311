@@ -35,6 +35,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	{
 		TalkBoxConfigurationApp app = new TalkBoxConfigurationApp();
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//conflict
 		
 		
 
