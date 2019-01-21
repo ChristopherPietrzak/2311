@@ -98,7 +98,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		if(eve.getSource() == j_active_presets)
 		{
 			remove_index = j_active_presets.getSelectedIndex();
-		}
+
 		
 		
 				
@@ -207,6 +207,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		this.getContentPane().add(selection_screen);
 		
 		
+<<<<<<< HEAD
 	}
 
 	private void preset_editor_set_up()
@@ -229,6 +230,59 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			{	
 			
 				active_presets.addElement(preset_library.get(selection_index));
+			
+			}
+			
+		}
+		
+=======
+>>>>>>> refs/heads/Chris
+	}
+<<<<<<< HEAD
+	
+	private void preset_remove_click()
+=======
+
+	private void preset_editor_set_up()
+>>>>>>> refs/heads/Chris
+	{
+<<<<<<< HEAD
+
+=======
+>>>>>>> refs/heads/Chris
+		// TODO Auto-generated method stub
+<<<<<<< HEAD
+		if (remove_index != -1)
+		{
+		active_presets.remove(remove_index);
+		}
+=======
+		
+		
+>>>>>>> refs/heads/Chris
+	}
+	
+	private void switch_panels() 
+	{
+		this.getContentPane().removeAll();
+		this.getContentPane().add(preset_editor);
+		this.getContentPane().revalidate();
+		//this.getContentPane().add(preset_editor);
+	}
+	
+	// helper functions for events
+	
+	private void preset_add_click() 
+	{
+		// TODO Auto-generated method stub
+	
+		if(selection_index != -1)
+		{
+			if (active_presets.contains(preset_library.get(selection_index)) == false)
+			{	
+			
+				active_presets.addElement(preset_library.get(selection_index));
+				int i = 0;
 			
 			}
 			
