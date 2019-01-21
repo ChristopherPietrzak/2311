@@ -238,6 +238,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	
 	private void preset_remove_click()
 	{
+
 		// TODO Auto-generated method stub
 		if (remove_index != -1)
 		{
