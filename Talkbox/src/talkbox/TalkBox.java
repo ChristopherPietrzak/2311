@@ -8,7 +8,7 @@ public class TalkBox {
 			System.out.println("James Testing");
 			System.out.println("Testing Thomas");
 			System.out.println("it works");
-			
+			int f = 3;
 	}
 
 }
