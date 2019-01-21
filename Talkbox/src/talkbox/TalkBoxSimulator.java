@@ -26,12 +26,12 @@ public class TalkBoxSimulator extends JFrame implements ActionListener {
 		JLabel h2 = new JLabel("Sad", SwingConstants.CENTER);
 		JLabel h3 = new JLabel("Bored", SwingConstants.CENTER);
 		JLabel h4 = new JLabel("Angry", SwingConstants.CENTER);
-		JLabel h5 = new JLabel("Excited", SwingConstants.CENTER);
+		JLabel h6 = new JLabel("Excited", SwingConstants.CENTER);
 		headers.add(h1);
 		headers.add(h2);
 		headers.add(h3);
 		headers.add(h4);
-		headers.add(h5);
+		headers.add(h6);
 		container.add(headers, BorderLayout.PAGE_START);
 		JPanel sim = new JPanel();
 		sim.setLayout(new GridLayout(2,5));
