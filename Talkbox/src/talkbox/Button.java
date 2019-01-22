@@ -12,6 +12,10 @@ public class Button {
 	private String audioFile; //= AudioSystem.getAudioInputStream(new File(clipName).getAbsoluteFile());
 	private String iconFile;
 	
+	public Button()
+	{
+		name = "Error";
+	}
 	public Button(String inName, String inAudioFile, String inIconFile)
 	{
 		name = inName;
