@@ -21,6 +21,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private JButton preset_add;
 	private JButton preset_remove;
 	private JButton preset_create;
+	private JButton preset_preview;
 	private int selection_index;
 	private int remove_index;
 	private int window_width;
@@ -51,7 +52,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		window_width = ((int)(screen_size.width * 0.8));
 		window_height = ((int) (screen_size.height * 0.8));
 		this.setSize(window_width,window_height);
-		this.setLocation(((int)(screen_size.width * 0.1)),((int) (screen_size.height * 0.1)));
+		this.setLocation(((int)(screen_size.width *0.1)),((int) (screen_size.height * 0.1)));
 		selection_screen_set_up();
 		preset_editor_set_up();
 		this.setVisible(true);
@@ -76,6 +77,11 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		if (eve.getSource() == preset_create)
 		{
 			switch_panels();
+		}
+		
+		if (eve.getSource() == preset_preview)
+		{
+			preview_panel();
 		}
 		
 		// TODO Auto-generated method stub
@@ -117,8 +123,10 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	    emotions.AddButton("happy", "happy.png", "I'm feeling happy.wav");
 	    emotions.AddButton("sad", "sad.png", "I'm feeling sad.wav");
 	  
+	    Expressions weather = new Expressions(0);
+	    
 	    preset_library.addElement(emotions);
-//	    preset_library.addElement("weather");
+	    preset_library.addElement(weather);
 //	    preset_library.addElement("preset 0");
 //	    preset_library.addElement("preset 1");
 //	    preset_library.addElement("preset 2");
@@ -183,21 +191,33 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		preset_add = new JButton("Add Preset");
 		preset_remove = new JButton("Remove Preset");
 		preset_create = new JButton("Create Preset");
+		preset_preview = new JButton("Preset Preview");
+		
 		selection_screen.add(preset_add);
 		selection_screen.add(preset_remove);
-		selection_screen.add(preset_create);  
-		preset_add.setSize((window_width / 7 ), (window_height / 12));
-		preset_remove.setSize((window_width / 7 ), (window_height / 12));
-		preset_create.setSize((window_width / 7 ), (window_height / 12));
-		preset_add.setLocation((window_width / 25 * 11),(0  +  (window_height / 12) ));
-		preset_remove.setLocation((window_width / 25 * 11),((window_height / 6) + (window_height / 12)));
-		preset_create.setLocation((window_width / 25 * 11) ,((window_height / 3) + (window_height / 12)));
+		selection_screen.add(preset_create); 
+		selection_screen.add(preset_preview); 
+		
+		preset_add.setSize((window_width / 8 ), (window_height / 12));
+		preset_remove.setSize((window_width / 8 ), (window_height / 12));
+		preset_create.setSize((window_width / 8 ), (window_height / 12));
+		preset_preview.setSize((window_width / 8 ), (window_height / 12));
+		
+		preset_add.setLocation((window_width / 25 * 11),(0  +  (window_height / 16) ));
+		preset_remove.setLocation((window_width / 25 * 11),((window_height / 8) + (window_height / 12)));
+		preset_create.setLocation((window_width / 25 * 11) ,((window_height / 4) + (window_height / 12)));
+		preset_preview.setLocation((window_width / 25 * 11) ,((window_height * 2 / 5) + (window_height / 12)));
+		
 		preset_add.setFont(new Font("Ariel", Font.BOLD, 35));
 		preset_remove.setFont(new Font ("Ariel", Font.BOLD, 35));
 		preset_create.setFont(new Font("Ariel", Font.BOLD, 35));
+		preset_preview.setFont(new Font("Ariel", Font.BOLD, 35));
+		
 		preset_add.addActionListener(this);
 		preset_remove.addActionListener(this);
 		preset_create.addActionListener(this);
+		preset_preview.addActionListener(this);
+		
 		j_preset_library.addListSelectionListener(this);
 		j_active_presets.addListSelectionListener(this);
 		JLabel pre_lib = new JLabel("Preset Library");
@@ -205,7 +225,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		pre_lib.setFont(new Font("Ariel", Font.PLAIN, 40));
 		act_pre.setFont(new Font("Ariel", Font.PLAIN, 40));
 		pre_lib.setLocation( 0 , (window_height * 3 / 5 ) );
-		act_pre.setLocation((window_width * 3 /5),( window_height * 3 /5));
+		act_pre.setLocation((window_width * 4 /5),( window_height * 3 /5));
 		pre_lib.setSize((window_width * 2 /5) ,( window_height /18) );
 		act_pre.setSize((window_width * 2 /5) ,( window_height /18) );
 		selection_screen.add(pre_lib);
@@ -257,6 +277,24 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		this.getContentPane().add(preset_editor);
 		this.getContentPane().revalidate();
 		//this.getContentPane().add(preset_editor);
+	}
+	private void preview_panel()
+	{
+		if(remove_index != -1) 
+		{
+		Expressions bar = active_presets.getElementAt(remove_index);
+		ArrayList<Button> barButtons = bar.ReturnButtons();
+		for(Button b : barButtons)
+		{
+			JButton Jb = new JButton(b.GetName());
+			Jb.setIcon(b.GetIcon());
+			Jb.setSize((window_width / 7 ), (window_height / 7));
+			Jb.setLocation((window_width - (290 * (barButtons.indexOf(b) + 1)) ),(190 + (window_height / 2 ) ));
+			Jb.addActionListener(this);
+			selection_screen.add(Jb);	
+		}
+		selection_screen.updateUI();
+		}
 	}
 	
 
