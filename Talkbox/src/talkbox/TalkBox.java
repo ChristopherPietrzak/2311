@@ -8,6 +8,8 @@ public class TalkBox {
 			System.out.println("James Testing");
 			System.out.println("Testing Thomas");
 			System.out.println("it works");
+			int i = 0;
+			int j = 2;
 			
 	}
 
