@@ -5,7 +5,7 @@ public class Expressions
 {
 	private int buttonNum;
 	private int audioButtonNum;
-	private ArrayList buttonList;
+	private ArrayList<Button> buttonList;
 	
 	public Expressions(int inButtonNum)//, int inAudioButtonNum)
 	{
@@ -41,6 +41,10 @@ public class Expressions
 	public void RemoveButton(Button input)
 	{
 		buttonList.remove(input);
+	}
+	public ArrayList<Button> ReturnButtons()
+	{
+		return buttonList;		
 	}
 	
 

@@ -1,5 +1,6 @@
 package talkbox;
 import java.io.File;
+import javax.swing.*;
 import java.util.*;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,9 +26,9 @@ public class Button {
 	{
 		return audioFile;
 	}
-	public String GetIcon()
+	public ImageIcon GetIcon()
 	{
-		return iconFile;
+		return new ImageIcon(iconFile);
 	}
 	public void SetName(String input)
 	{
