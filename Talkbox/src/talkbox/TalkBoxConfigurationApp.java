@@ -275,24 +275,27 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	}
 	private void preview_panel()
 	{
-		selection_screen.updateUI();
 		
 		if(selection_index != -1) 
 		{
+//		this.getContentPane().removeAll();
+//		this.getContentPane().add(preset_editor);
+//		this.getContentPane().revalidate();
+		
 		Expressions bar = preset_library.getElementAt(selection_index);
 		ArrayList<Button> barButtons = bar.ReturnButtons();
 		for(Button b : barButtons)
 		{
 			JButton Jb = new JButton(b.GetName());
 			Jb.setIcon(b.GetIcon());
-			Jb.setSize((window_width / (3 * barButtons.size()) ), (window_height / 7));
-			Jb.setLocation((window_width / ( 2 * barButtons.size()) * (barButtons.indexOf(b)+1)) ,(190 + (window_height / 2 ) ));
+			Jb.setSize((window_width * 2 / (3 * barButtons.size()) ), (window_height / 7));
+			Jb.setLocation((window_width *2 2 / ( 3 * barButtons.size()) * (barButtons.indexOf(b)+1)) ,(190 + (window_height / 2 ) ));
 			Jb.addActionListener(this);
 				
-			selection_screen.add(Jb);
+			this.selection_screen.add(Jb);
 		}
 		
-		selection_screen.updateUI();
+		this.selection_screen.updateUI();
 		}
 	}
 	
