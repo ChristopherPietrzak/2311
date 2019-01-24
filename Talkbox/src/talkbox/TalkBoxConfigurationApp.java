@@ -12,10 +12,10 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 
 	private JPanel selection_screen; 
 	private JPanel preset_editor;
-	private DefaultListModel<Expressions> preset_library;
-	private DefaultListModel<Expressions> active_presets;
-	private JList<Expressions> j_preset_library;
-	private JList<Expressions> j_active_presets;
+	private DefaultListModel<Preset> preset_library;
+	private DefaultListModel<Preset> active_presets;
+	private JList<Preset> j_preset_library;
+	private JList<Preset> j_active_presets;
 	private JScrollPane j_p_preset_library;
 	private JScrollPane j_p_active_presets;
 	private JButton preset_add;
@@ -27,6 +27,9 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private int window_height;
 	private Dimension screen_size;
 	
+	private ArrayList<JButton> activeButtons = new ArrayList<JButton>();
+	private ArrayList<Expression> newButtons;
+	
 	
 	
 	
@@ -35,9 +38,6 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	{
 		TalkBoxConfigurationApp app = new TalkBoxConfigurationApp();
 		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
-
 	}
 	
 	public TalkBoxConfigurationApp()
@@ -64,7 +64,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	public void actionPerformed(ActionEvent eve) { 
 		if (eve.getSource() == preset_add)
 		{
-				preset_add_click();
+			preset_add_click();
 		}
 		
 		if (eve.getSource() == preset_remove)
@@ -78,6 +78,14 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			switch_panels();
 		}
 		
+		for(int i = 0; i < activeButtons.size(); i++)
+		{
+			if(eve.getSource() == activeButtons.get(i)) 
+			{
+				newButtons.get(i).PlayAudio();			
+			}
+			
+		}
 		
 		// TODO Auto-generated method stub
 		
@@ -100,7 +108,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		{
 			remove_index = j_active_presets.getSelectedIndex();
 		}
-		
+	
 		
 				
 	}
@@ -109,31 +117,40 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	
 	private void selection_screen_set_up()
 	{
-		preset_library = new DefaultListModel<Expressions>();
-	    active_presets = new DefaultListModel<Expressions>();
+//		JTextField toggles = new JTextField("toggle number");
+//		toggles.setEditable(true);
+//		toggles.setVisible(true);
+//		toggles.addActionListener(this);
+//		selection_screen.add(toggles);
+//		toggles.setSize(200, 200);
+//		toggles.setLocation(400, 400);
+		
+		
+		preset_library = new DefaultListModel<Preset>();
+	    active_presets = new DefaultListModel<Preset>();
 	    // in the actual version, values will be in a file and not hard coded
-	    Expressions emotions = new Expressions(5);
+	    Preset emotions = new Preset(5);
 	    emotions.AddButton("angry", "angry.png", "I'm feeling angry.wav");
 	    emotions.AddButton("bored", "bored.png", "I'm feeling bored.wav");
 	    emotions.AddButton("exited", "exited.png", "I'm feeling exited.wav");
 	    emotions.AddButton("happy", "happy.png", "I'm feeling happy.wav");
 	    emotions.AddButton("sad", "sad.png", "I'm feeling sad.wav");
 	  
-	    Expressions weather = new Expressions(6);
+	    Preset weather = new Preset(6);
 	    
-	    weather.AddButton(new Button());
-	    weather.AddButton(new Button());
-	    weather.AddButton(new Button());
-	    weather.AddButton(new Button());
-	    weather.AddButton(new Button());
-	    weather.AddButton(new Button());
+	    weather.AddButton(new Expression());
+	    weather.AddButton(new Expression());
+	    weather.AddButton(new Expression());
+	    weather.AddButton(new Expression());
+	    weather.AddButton(new Expression());
+	    weather.AddButton(new Expression());
 	    
-	    Expressions preset_0 = new Expressions(1);
-	    preset_0.AddButton(new Button());
+	    //Expressions preset_0 = new Expressions(1, 1);
+	    //preset_0.AddButton(new Button());
 	    
 	    preset_library.addElement(emotions);
 	    preset_library.addElement(weather);
-	    preset_library.addElement(preset_0);
+	    //preset_library.addElement(preset_0);
 //	    preset_library.addElement("preset 1");
 //	    preset_library.addElement("preset 2");
 //	    preset_library.addElement("preset 3");
@@ -177,8 +194,8 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 //	    preset_library.addElement("preset 40");
 //	    preset_library.addElement("preset 41");
 	    
-	    j_preset_library = new JList<Expressions>(preset_library);
-		j_active_presets = new JList<Expressions>(active_presets);
+	    j_preset_library = new JList<Preset>(preset_library);
+		j_active_presets = new JList<Preset>(active_presets);
 		j_p_preset_library = new JScrollPane(j_preset_library);
 		j_p_active_presets = new JScrollPane(j_active_presets);
 		selection_screen = new JPanel();
@@ -275,29 +292,48 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	}
 	private void preview_panel()
 	{
+	
+		if(activeButtons.isEmpty() == false)
+		{
+			for(JButton Jb : activeButtons)
+			{
+				selection_screen.remove(Jb);
+			}
+			activeButtons.clear();
+		}
+		
+		
 		
 		if(selection_index != -1) 
 		{
-//		this.getContentPane().removeAll();
-//		this.getContentPane().add(preset_editor);
-//		this.getContentPane().revalidate();
+		Preset bar = preset_library.getElementAt(selection_index);
+		newButtons = bar.ReturnButtons();
 		
-		Expressions bar = preset_library.getElementAt(selection_index);
-		ArrayList<Button> barButtons = bar.ReturnButtons();
-		for(Button b : barButtons)
-		{
+		
+		for(Expression b : newButtons)
+		{	
+			
 			JButton Jb = new JButton(b.GetName());
-			Jb.setIcon(b.GetIcon());
-			Jb.setSize((window_width * 2 / (3 * barButtons.size()) ), (window_height / 7));
-			Jb.setLocation((window_width *2 2 / ( 3 * barButtons.size()) * (barButtons.indexOf(b)+1)) ,(190 + (window_height / 2 ) ));
+			Icon img = new ImageIcon(b.GetIconPath());
+			Jb.setIcon(img);
+			
+			activeButtons.add(Jb);
+			
+			Jb.setSize((window_width * 2 / (3 * newButtons.size()) ), (window_height / 7));
+			Jb.setLocation((window_width * 2  / ( 3 * newButtons.size()) * (newButtons.indexOf(b)+1)) ,(190 + (window_height / 2 ) ));
 			Jb.addActionListener(this);
-				
-			this.selection_screen.add(Jb);
+			
+			this.selection_screen.add(Jb);	
+			//b.PlayAudio();
+			
 		}
-		
 		this.selection_screen.updateUI();
+		
 		}
 	}
+	
+	
+	
 	
 
 	
