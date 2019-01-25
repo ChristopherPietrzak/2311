@@ -53,7 +53,7 @@ public class Expression {
 	{
 		try 
 		{
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("I'm Feeling Angry.wma").getAbsoluteFile());
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("I'm Feeling Angry.wav").getAbsoluteFile());
 			Clip clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
