@@ -17,10 +17,6 @@ public class Preset
 	}
 	public int getButtonNum()
 	{
-		return buttonNum;
-	}
-	public int getAudioButtonNum()
-	{
 		return buttonList.size(); //audioButtonNum;
 	}
 	public void AddButton(Expression input)

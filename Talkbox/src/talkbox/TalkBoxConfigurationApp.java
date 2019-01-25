@@ -145,13 +145,25 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	    weather.AddButton(new Expression());
 	    weather.AddButton(new Expression());
 	    
-	    //Expressions preset_0 = new Expressions(1, 1);
-	    //preset_0.AddButton(new Button());
-	    
+	    Preset preset_0 = new Preset(1);
+	    preset_0.AddButton(new Expression());
+
+	    Preset preset_1 = new Preset(10);
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+	    preset_1.AddButton(new Expression());
+
 	    preset_library.addElement(emotions);
 	    preset_library.addElement(weather);
-	    //preset_library.addElement(preset_0);
-//	    preset_library.addElement("preset 1");
+	    preset_library.addElement(preset_0);
+	    preset_library.addElement(preset_1);
 //	    preset_library.addElement("preset 2");
 //	    preset_library.addElement("preset 3");
 //	    preset_library.addElement("preset 4");
@@ -319,8 +331,8 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			
 			activeButtons.add(Jb);
 			
-			Jb.setSize((window_width * 2 / (3 * newButtons.size()) ), (window_height / 7));
-			Jb.setLocation((window_width * 2  / ( 3 * newButtons.size()) * (newButtons.indexOf(b)+1)) ,(190 + (window_height / 2 ) ));
+			Jb.setSize((window_width * 5 / (6 * newButtons.size()) ), (window_height / 7));
+			Jb.setLocation(((window_width + 18400 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (200 + (window_height / 2 ) ));
 			Jb.addActionListener(this);
 			
 			this.selection_screen.add(Jb);	
