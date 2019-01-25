@@ -5,11 +5,13 @@ public class Preset
 {
 	private int buttonNum;
 	private ArrayList<Expression> buttonList;
+	private String name;
 	
-	public Preset(int inButtonNum)
+	public Preset(int inButtonNum, String inName)
 	{
 		buttonNum = inButtonNum;
 		buttonList = new ArrayList<Expression>(buttonNum);
+		name = inName;
 	}
 	public void setButtonNum(int input)
 	{
@@ -31,10 +33,19 @@ public class Preset
 	{
 		buttonList.remove(input);
 	}
+	public String GetName()
+	{
+		return name;
+	}
+	public void SetName(String input)
+	{
+		name = input;
+	}
 	public ArrayList<Expression> ReturnButtons()
 	{
 		return buttonList;		
 	}
+	
 	
 
 }
