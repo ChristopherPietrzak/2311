@@ -130,11 +130,11 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	    active_presets = new DefaultListModel<Preset>();
 	    // in the actual version, values will be in a file and not hard coded
 	    Preset emotions = new Preset(5);
-	    emotions.AddButton("angry", "angry.png", "I'm feeling angry.wav");
-	    emotions.AddButton("bored", "bored.png", "I'm feeling bored.wav");
-	    emotions.AddButton("exited", "exited.png", "I'm feeling exited.wav");
-	    emotions.AddButton("happy", "happy.png", "I'm feeling happy.wav");
-	    emotions.AddButton("sad", "sad.png", "I'm feeling sad.wav");
+	    emotions.AddButton("angry", "I'm feeling angry.wav", "angry.png");
+	    emotions.AddButton("bored", "I'm feeling bored.wav", "bored.png");
+	    emotions.AddButton("exited", "I'm feeling excited.wav", "excited.png");
+	    emotions.AddButton("happy", "I'm feeling happy.wav", "happy.png");
+	    emotions.AddButton("sad", "I'm feeling sad.wav", "sad.png");
 	  
 	    Preset weather = new Preset(6);
 	    
@@ -254,6 +254,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		act_pre.setSize((window_width * 2 /5) ,( window_height /18) );
 		selection_screen.add(pre_lib);
 		selection_screen.add(act_pre);
+		
 		this.getContentPane().add(selection_screen);
 		
 		
@@ -331,8 +332,8 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			
 			activeButtons.add(Jb);
 			
-			Jb.setSize((window_width * 5 / (6 * newButtons.size()) ), (window_height / 7));
-			Jb.setLocation(((window_width + 18400 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (200 + (window_height / 2 ) ));
+			Jb.setSize((window_width * 5 / (6 * newButtons.size()) ), (window_height / 5));
+			Jb.setLocation(((window_width + 18400 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (165 + (window_height / 2 ) ));
 			Jb.addActionListener(this);
 			
 			this.selection_screen.add(Jb);	
