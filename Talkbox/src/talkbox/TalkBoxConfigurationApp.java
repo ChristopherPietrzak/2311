@@ -324,7 +324,6 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			Jb.addActionListener(this);
 			
 			this.selection_screen.add(Jb);	
-			//b.PlayAudio();
 			
 		}
 		this.selection_screen.updateUI();
