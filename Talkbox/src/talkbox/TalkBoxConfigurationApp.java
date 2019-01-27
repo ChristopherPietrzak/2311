@@ -3,12 +3,14 @@ import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import java.util.*;
 
-public class TalkBoxConfigurationApp extends JFrame implements ActionListener , ListSelectionListener
+public class TalkBoxConfigurationApp extends JFrame implements ActionListener , ListSelectionListener, ChangeListener
 {
 
 	//global objects
@@ -31,6 +33,9 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private JButton preset_create;
 	private int selection_index;
 	private int remove_index;
+
+	private JSpinner spinner;
+
 	private ArrayList<JButton> activeButtons = new ArrayList<JButton>();
 	private ArrayList<Expression> newButtons;
 	private GridBagLayout editor_layout;
@@ -95,7 +100,18 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		
 	}
 
-	
+	@Override
+	public void stateChanged(ChangeEvent eve)
+	{
+		if(eve.getSource() == spinner)
+		{
+			int location = (int) spinner.getValue();
+			System.out.println(location);
+			toggle_select(location);
+			
+		}
+		
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent eve) { 
@@ -154,19 +170,12 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	
 	private void selection_screen_set_up()
 	{
-//		JTextField toggles = new JTextField("toggle number");
-//		toggles.setEditable(true);
-//		toggles.setVisible(true);
-//		toggles.addActionListener(this);
-//		selection_screen.add(toggles);
-//		toggles.setSize(200, 200);
-//		toggles.setLocation(400, 400);
-		
-		
+			
 		preset_library = new DefaultListModel<Preset>();
 	    active_presets = new DefaultListModel<Preset>();
 	    preset_library_list = new DefaultListModel<String>();
 	    active_preset_names = new DefaultListModel<String>();
+	    
 	    // in the actual version, values will be in a file and not hard coded
 	    Preset emotions = new Preset(5, "Emotions");
 	    emotions.AddButton("angry", "I'm feeling angry.wav", "angry.png");
@@ -296,6 +305,18 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		act_pre.setSize((window_width * 2 /5) ,( window_height /18) );
 		selection_screen.add(pre_lib);
 		selection_screen.add(act_pre);
+		
+		String[] num = {"1","2","3","4","5","6","7","8","9","10"};
+		SpinnerListModel numberList = new SpinnerListModel(num);
+		spinner = new JSpinner(numberList);
+		spinner.setName("Toggles");
+		spinner.setSize(window_width * 1 / 7, window_height * 1 / 10);
+		spinner.setLocation((window_width * 9 /21),( window_height * 1 /2));
+		spinner.setFont(new Font("Ariel", Font.PLAIN, 40));
+		//spinner.addChangeListener(new ChangeListener());
+		
+		
+		selection_screen.add(spinner);
 		
 		this.getContentPane().add(selection_screen);
 	
@@ -635,7 +656,33 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		
 		}
 	}
-	
+	public void toggle_select(int toggleNum)
+	{
+		int QuickToggles;
+//		try
+//		{
+//			toggleNum = (int) spinner.getValue();
+//		}
+//		catch(Exception e)
+//		{
+//			System.out.println("error converting spinner values to ints");
+//		}
+		for(QuickToggles = 1; QuickToggles < toggleNum; QuickToggles++)
+		{
+			Toggle Jt = new Toggle();
+			Jt.AddPreset(active_presets.getElementAt(QuickToggles));
+			Jt.MakeQuickToggle();
+			System.out.println("added one preset");
+		}
+		Toggle last = new Toggle();
+		for(int i = QuickToggles; i < active_presets.size(); i++) 
+		{
+			last.AddPreset(active_presets.getElementAt(i));
+			System.out.println("added preset");
+		}
+		
+		
+	}
 	
 	
 	
