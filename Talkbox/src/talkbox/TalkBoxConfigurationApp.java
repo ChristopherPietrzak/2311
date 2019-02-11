@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import java.util.*;
 
-public class TalkBoxConfigurationApp extends JFrame implements ActionListener , ListSelectionListener, ChangeListener
+public class TalkBoxConfigurationApp extends JFrame implements ActionListener , ListSelectionListener, ChangeListener, ComponentListener
 {
 
 	//global objects
@@ -41,7 +41,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private GridBagLayout editor_layout;
 	
 	// objects for the preset editor
-	private JPanel preset_editor;
+	private PresetEditor preset_editor;
 	
 	// preset selector objects
 	JList<String> editor_preset_selector;
@@ -90,7 +90,9 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		this.setLocation(((int)(screen_size.width *0.1)),((int) (screen_size.height * 0.1)));
 		
 		selection_screen_set_up();
+		preset_editor = new PresetEditor(this);
 		this.setVisible(true);
+		this.addComponentListener(this);
 		
 	}
 
@@ -367,7 +369,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private void switch_panels() 
 	{
 		this.getContentPane().removeAll();
-		this.getContentPane().add(preset_editor);
+		this.getContentPane().add( preset_editor.preset_editor_panel());
 		this.getContentPane().revalidate();
 		//this.getContentPane().add(preset_editor);
 	}
@@ -437,6 +439,35 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 			System.out.println("added preset");
 		}
 		
+		
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent e)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent e) 
+	{
+
+		preset_editor.set_component_sizes();
+		
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e)
+	{
+		// TODO Auto-generated method stub
 		
 	}
 	
