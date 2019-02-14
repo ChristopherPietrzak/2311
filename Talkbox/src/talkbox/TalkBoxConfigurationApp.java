@@ -19,9 +19,16 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 	private Dimension screen_size;
 	
 	// objects for the selection screen
-	private JPanel selection_screen; 
-	private DefaultListModel<Preset> preset_library;
-	private DefaultListModel<String> preset_library_list;
+	public JPanel selection_screen; 
+	
+	// These lists represent the model of the config app 
+	// only the preset editor should be allowed to make changes
+	public DefaultListModel<Preset> preset_library;
+	public DefaultListModel<String> preset_library_list;
+	public DefaultListModel<Expression> exp_library;
+ 	
+	// this list represent selected presets for the device 
+	// only the selection screen should edit these
 	private DefaultListModel<Preset> active_presets;
 	private DefaultListModel<String> active_preset_names;
 	private JList<String> j_preset_library;
@@ -124,7 +131,7 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		
 		if (eve.getSource() == preset_create)
 		{
-			switch_panels();
+			switch_to_editor_panel();
 		}
 		
 		for(int i = 0; i < activeButtons.size(); i++)
@@ -366,10 +373,12 @@ public class TalkBoxConfigurationApp extends JFrame implements ActionListener , 
 		}
 	}
 	
-	private void switch_panels() 
+	private void switch_to_editor_panel() 
 	{
 		this.getContentPane().removeAll();
+		preset_editor.resetView();
 		this.getContentPane().add( preset_editor.preset_editor_panel());
+		this.getContentPane().repaint();
 		this.getContentPane().revalidate();
 		//this.getContentPane().add(preset_editor);
 	}
