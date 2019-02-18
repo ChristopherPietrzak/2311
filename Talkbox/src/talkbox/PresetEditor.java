@@ -27,9 +27,7 @@ public class PresetEditor implements ActionListener, ListSelectionListener
     JScrollPane editor_preset_selector;
     
 	JButton create_new_preset;
-	JButton save_current_preset;
 	JButton delete_current_preset;
-	
 	int preset_list_index;
 	
 	
@@ -46,14 +44,12 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	
 	// expression editor objects
 	ImageIcon step_2;
-	JLabel browse_exp_label;
 	JLabel exp_pic;
 	JButton upload_photo;
 	JButton record_audio;
 	JButton play_audio;
 	JButton reset;
 	JButton save_changes;
-	JComboBox<String> browse_exp;
 	boolean is_exp_initialized;
 	
 	 // data model objects
@@ -91,14 +87,13 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		create_new_preset = new JButton("Create new preset");
 		preset_editor.add(create_new_preset);
 		create_new_preset.addActionListener(this);
+		//create_popup = new JOptionPane("Create A New Preset");
 		
-		save_current_preset = new JButton("Save current preset");
-		preset_editor.add(save_current_preset);
-		save_current_preset.addActionListener(this);
 		
 		delete_current_preset = new JButton("delete current preset");
 		preset_editor.add(delete_current_preset);
 		delete_current_preset.addActionListener(this);
+		//delete_popup = new JOptionPane("Delete Current Preset");
 		
 	    // preset viewer objects
 		current_preset_indicator = new JLabel("Current preset : 0");
@@ -126,8 +121,6 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		
 		step_2 = new ImageIcon("exp_load.png");
 		
-		browse_exp_label = new JLabel("Browse Expression Library: ");
-		preset_editor.add(browse_exp_label);
 		
 		exp_pic = new JLabel(step_2);
 		preset_editor.add(exp_pic);
@@ -151,9 +144,6 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		save_changes = new JButton("save changes to preset");
 		preset_editor.add(save_changes);
 		save_changes.addActionListener(this);
-		
-		browse_exp = new JComboBox<String>();
-		preset_editor.add(browse_exp);
 		
 		// data model initialization
 		current_preset = null;
@@ -223,12 +213,9 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		 
 		 create_new_preset.setSize( grid_x(270), grid_y(90) );
 		 create_new_preset.setLocation( grid_x(360), grid_y(200) );
-		 
-		 save_current_preset.setSize( grid_x(270), grid_y(90) );
-		 save_current_preset.setLocation( grid_x(360), grid_y(350) );
-		 
+
 		 delete_current_preset.setSize( grid_x(270), grid_y(90) );
-		 delete_current_preset.setLocation( grid_x(360), grid_y(510) );
+		 delete_current_preset.setLocation( grid_x(360), grid_y(320) );
 
 	    // preset viewer objects
 		 current_preset_indicator.setSize( grid_x(1200), grid_y(50) );
@@ -248,10 +235,10 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		
 		// expression editor objects
 		 exp_pic.setSize( grid_x(440), grid_y(350) );
-		 exp_pic.setLocation( grid_x(940), grid_y(20) );
+		 exp_pic.setLocation( grid_x(980), grid_y(100) );
 
 		 upload_photo.setSize( grid_x(440), grid_y(75) );
-		 upload_photo.setLocation( grid_x(940), grid_y(380) );
+		 upload_photo.setLocation( grid_x(980), grid_y(455) );
 		 
 		 record_audio.setSize( grid_x(180), grid_y(140) );
 		 record_audio.setLocation( grid_x(1520), grid_y(120) );
@@ -259,17 +246,12 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		 play_audio.setSize( grid_x(180), grid_y(140) );
 		 play_audio.setLocation( grid_x(1740), grid_y(120) );
 		 
-		 browse_exp_label.setSize(grid_x(470), grid_y(35));
-		 browse_exp_label.setLocation(grid_x(1480), grid_y(365));
-		 
-		 browse_exp.setSize( grid_x(470), grid_y(60) );
-		 browse_exp.setLocation( grid_x(1480), grid_y(400) );
 		 
 		 save_changes.setSize( grid_x(470), grid_y(60) );
-		 save_changes.setLocation( grid_x(1480), grid_y(470) );
+		 save_changes.setLocation( grid_x(1480), grid_y(400) );
 		 
 		 reset.setSize( grid_x(470), grid_y(60) );
-		 reset.setLocation( grid_x(1480), grid_y(540) );
+		 reset.setLocation( grid_x(1480), grid_y(470) );
 		 
 		 
 		
@@ -297,6 +279,17 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	public void actionPerformed(ActionEvent e)
 	{
 	
+		if(e.getSource() == create_new_preset )
+		{
+			create_new_preset_input();
+		}
+		
+		if (e.getSource() == delete_current_preset)
+		{
+			delete_current_preset_action();
+		}
+		
+		
 		if (e.getSource() == back_to_previous )
 		{
 			switch_to_selector_panel();
@@ -331,6 +324,119 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		
 	}
 
+	private void delete_current_preset_action() 
+	{
+
+	    	JOptionPane.showConfirmDialog(preset_editor, "Are ou sure you want to delete this preset:");
+	}
+
+	private void create_new_preset_input() 
+	{
+	
+		String new_preset_name = null;
+	    int num_exps = -1;
+		boolean name_passed_checks = false;
+		//this method will check if the input is non empty and does not already
+		//exists if yes to both then it will create a new preset with that name
+		// will also ask for the amount of buttons for the preset
+		// cancel(null value) will cancel the operation
+		
+		
+		while (name_passed_checks == false)
+		{
+	
+			new_preset_name = JOptionPane.showInputDialog("Please enter the new preset name");
+		   
+			if (new_preset_name == null)
+			{
+				name_passed_checks = true;
+			}
+			else 
+			
+			{
+				boolean empty_input = new_preset_name.equals("");
+				if(empty_input)
+				{
+					JOptionPane.showMessageDialog( preset_editor , "Empty names are not allowed, Please enter a non empty name");
+				}
+				
+				boolean exists = false;
+				
+		   
+				for (int i = 0; i < talkbox_config_app.preset_library_list.size(); i++)
+				{
+					if(new_preset_name.equals(talkbox_config_app.preset_library_list.get(i)))
+					{
+		    		exists = true;
+		    		JOptionPane.showMessageDialog( preset_editor , "Name already exists, please input a new name");
+					}
+				}
+		    		
+				if ((!empty_input) && (!exists))
+				{
+					name_passed_checks = true;
+				}
+			}
+			
+		
+			
+		
+			
+			
+		}
+		
+		// an array holding the numbers 1-20 as strings
+		String[] numbers;
+		numbers = new String[20];
+		for(int i = 0; i < 20; i++)
+		{
+			numbers[i] = Integer.toString(i+1);
+		}
+		
+		
+		if(new_preset_name != null)
+		{
+	
+			String x = (String) JOptionPane.showInputDialog(preset_editor,"Please select the number of audio buttons", "Create preset options",JOptionPane.PLAIN_MESSAGE, null,numbers,"1");
+			num_exps = Integer.parseInt(x);
+
+		}
+		
+		
+		// if the input is okay then finally create the new preset
+		if (new_preset_name != null && num_exps != -1)
+		{
+			create_preset_action(new_preset_name, num_exps);
+		}
+		
+		
+		
+		
+	}
+
+	
+	private void create_preset_action(String new_preset_name, int num_exps) 
+	
+	{
+	
+			Preset temp = new Preset(num_exps , new_preset_name);
+			for (int i = 0; i < num_exps; i++)
+			{
+				temp.AddButton(new Expression("Blank", null, "exp_empty.png"));
+			
+			}
+			
+			talkbox_config_app.preset_library.addElement(temp);
+			talkbox_config_app.preset_library_list.addElement(temp.GetName());
+			preset_selector_jlist.setSelectedIndex(talkbox_config_app.preset_library_list.getSize() - 1);
+			preset_view();
+			
+			
+			
+			
+			
+	}
+
 	@Override
 	public void valueChanged(ListSelectionEvent e)
 	
@@ -347,6 +453,8 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 
 	private void preset_view()
 	{
+		
+		exp_pic.setIcon(step_2);
 		if (current_preset == null)
 		{
 			preset_editor.remove(step_1);

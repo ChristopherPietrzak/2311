@@ -51,5 +51,10 @@ public class Preset
 		return buttonList.get(index);
 	}
 	
+	public void ReplaceButtonAt(int index , Expression replacement)
+	{
+		buttonList.set(index, replacement);
+	}
+	
 
 }
