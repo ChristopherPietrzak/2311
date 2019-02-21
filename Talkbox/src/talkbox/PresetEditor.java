@@ -2,6 +2,11 @@ package talkbox;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.event.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -9,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class PresetEditor implements ActionListener, ListSelectionListener
@@ -322,12 +328,105 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 			
 		}
 		
+		
+		if(e.getSource() == reset )
+		{
+			reset_expression();
+		}
+		
+		
+		if(e.getSource() == save_changes)
+		{
+			save_expression();
+		}
+		
+		
+		if(e.getSource() == upload_photo)
+		{
+			upload_photo_action();
+		}
+		
+		
+	}
+
+	private void upload_photo_action() 
+	{
+		//to do must throw in logic that makes sure current exp is not at null
+		
+		
+		JFileChooser fc = new JFileChooser();
+		String[] image_formats = { "jpeg","JPEG", "png", "PNG", "gif", "GIF"};
+		FileNameExtensionFilter image_filter = new FileNameExtensionFilter("Acceptable file Formats" , image_formats);
+		fc.addChoosableFileFilter(image_filter);
+		
+		if(fc.showOpenDialog(upload_photo) == JFileChooser.APPROVE_OPTION )
+		{
+			// to do find out how to write custom names for the files take input from user
+			// see if the formats can be determined automatically
+			//System.out.println(fc.getSelectedFile().getAbsolutePath());
+		     try {
+				Files.copy( Paths.get(fc.getSelectedFile().getAbsolutePath()), Paths.get("./Photos/city.jpg"), StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println("you messed up");
+			}
+			//format
+			//set image icon path, change the copy current exp
+			
+		}
+		
+	}
+
+	private void save_expression()
+	{
+		//to do must check if there is a current exp
+		current_exp = current_exp_copy;
+		
+	}
+
+	private void reset_expression() 
+	{
+		// to do must check if there is a current exp
+		current_exp_copy = current_exp;
+		exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
+		
+		
 	}
 
 	private void delete_current_preset_action() 
 	{
 
-	    	JOptionPane.showConfirmDialog(preset_editor, "Are ou sure you want to delete this preset:");
+		if(preset_selector_jlist.getSelectedIndex() == -1)
+		{
+			JOptionPane.showMessageDialog(preset_editor, "Cannot delete a preset as there is no preset currrently selected");
+		}
+	    
+		else
+		{
+			if (preset_selector_jlist.getSelectedIndex() < 4)
+			{
+				JOptionPane.showMessageDialog(preset_editor, "Error you cannot delete default presets, you may however delete any user created presets");
+			}
+			
+			else 
+			{
+				int selection  = 	JOptionPane.showConfirmDialog(preset_editor, "Are you sure you want to delete this preset?");
+	     
+				if (selection == 0 )
+				{
+					// this if statement stops the deletion of default presets that came with software
+					talkbox_config_app.preset_library.remove(preset_selector_jlist.getSelectedIndex());
+					talkbox_config_app.preset_library_list.remove(preset_selector_jlist.getSelectedIndex());
+					preset_selector_jlist.clearSelection();
+					//preset_selector_jlist.setSelectedIndex(0);
+					resetView();
+				
+				}
+			}
+	    
+		}
+		
+		
 	}
 
 	private void create_new_preset_input() 
