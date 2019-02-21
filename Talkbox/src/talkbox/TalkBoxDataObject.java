@@ -5,7 +5,12 @@ import java.nio.file.Path;
 public class TalkBoxDataObject implements TalkBoxConfiguration {
 
 	
-	public 	TalkBoxDataObject(int num_audio_buttons, int num_audio_sets, int total_num_buttons , Path rel_path , String [][] file_names) 
+
+
+
+
+
+	public 	TalkBoxDataObject(int num_audio_buttons, int num_audio_sets, int total_num_buttons , Path rel_path , String [][] file_names_audio, String[][] file_names_icon) 
 
 	{ 
 	
@@ -13,7 +18,9 @@ public class TalkBoxDataObject implements TalkBoxConfiguration {
 	n_a_s = num_audio_sets;
 	t_n_b = total_num_buttons;
 	path = rel_path;
-	names = file_names;
+	names_audio = file_names_audio;
+	names_icon = file_names_icon;
+	
 	
 		
 		
@@ -23,7 +30,8 @@ public class TalkBoxDataObject implements TalkBoxConfiguration {
 	private int n_a_s;
 	private int t_n_b;
 	private Path path;
-	private String [][] names;
+	private String [][] names_audio;
+	private String [][] names_icon;
 	
 	
 	
@@ -56,7 +64,12 @@ public class TalkBoxDataObject implements TalkBoxConfiguration {
 	@Override
 	public String[][] getAudioFileNames() {
 		// TODO Auto-generated method stub
-		return names;
+		return names_audio;
 	}
 
+		
+	public String[][] getIconFileNames() {
+		// TODO Auto-generated method stub
+		return names_icon;
+	}
 }
