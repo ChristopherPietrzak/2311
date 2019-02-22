@@ -63,6 +63,8 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	 Preset current_preset;
 	 Expression current_exp;
 	 Expression current_exp_copy;
+	 String current_image;
+	 int  preset_image_index;
 	
 	
 	public PresetEditor(TalkBoxConfigurationApp tbca) 
@@ -154,11 +156,11 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		// data model initialization
 		current_preset = null;
 		current_exp = null;
-		current_exp_copy = null;
 		
 		
 		preset_list_index = -1;
 		set_component_sizes();
+		
 		
 		
 		
@@ -323,6 +325,7 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 			{
 			    
 				edit_exp(current_preset.getButtonAt(i));
+				preset_image_index = i;
 				
 			}
 			
@@ -343,7 +346,10 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		
 		if(e.getSource() == upload_photo)
 		{
-			upload_photo_action();
+			if (current_exp != null)
+				{
+					upload_photo_action();
+				}
 		}
 		
 		
@@ -351,7 +357,6 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 
 	private void upload_photo_action() 
 	{
-		//to do must throw in logic that makes sure current exp is not at null
 		
 		
 		JFileChooser fc = new JFileChooser();
@@ -363,14 +368,24 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		{
 			// to do find out how to write custom names for the files take input from user
 			// see if the formats can be determined automatically
-			//System.out.println(fc.getSelectedFile().getAbsolutePath());
-		     try {
-				Files.copy( Paths.get(fc.getSelectedFile().getAbsolutePath()), Paths.get("./Photos/city.jpg"), StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+
+			String image_name = fc.getSelectedFile().getAbsolutePath();
+			String new_image_name = "./Photos/" + System.currentTimeMillis() + image_name.substring((image_name.length() - 4));
+			
+		     try 
+		     {
+				Files.copy( Paths.get(fc.getSelectedFile().getAbsolutePath()), Paths.get(new_image_name), StandardCopyOption.REPLACE_EXISTING);
+				exp_pic.setIcon(new ImageIcon(new_image_name));
+				current_image = new_image_name;
+				preset_editor.repaint();
+				preset_editor.revalidate();
+		     } 
+		     
+		     catch (IOException e)
+		     {
 				System.out.println("you messed up");
-			}
-			//format
+		     }
+			// to do format
 			//set image icon path, change the copy current exp
 			
 		}
@@ -379,17 +394,26 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 
 	private void save_expression()
 	{
-		//to do must check if there is a current exp
-		current_exp = current_exp_copy;
-		
+		if (current_exp != null)
+		{
+			current_exp.SetIconPath(current_image);
+			preset_view_image_list.get(preset_image_index).setIcon(new ImageIcon(current_image));
+			// to do add the change for the audio
+			preset_editor.repaint();
+			preset_editor.revalidate();
+		}
 	}
 
 	private void reset_expression() 
 	{
-		// to do must check if there is a current exp
-		current_exp_copy = current_exp;
-		exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
 		
+		if(current_exp != null)
+		{
+			//to do add the reset for the audio
+			current_image = current_exp.GetIconPath();
+			current_exp_copy = current_exp;
+			exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
+		}
 		
 	}
 
@@ -634,10 +658,9 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	public void edit_exp(Expression exp)
 	{
 		
-		
+		// to do add the the initialization for the current audio
 		current_exp = exp;
-		current_exp_copy = new Expression(exp.GetName(), exp.GetAudioPath(), exp.GetIconPath());
-		
+		current_image = current_exp.GetIconPath();
 		exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
 		System.out.println("success");
 		
