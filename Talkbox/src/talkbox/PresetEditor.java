@@ -2,7 +2,12 @@ package talkbox;
 import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.event.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +20,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream; 
+import javax.sound.sampled.AudioSystem; 
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException; 
 
 
 public class PresetEditor implements ActionListener, ListSelectionListener
@@ -57,6 +71,15 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	JButton reset;
 	JButton save_changes;
 	boolean is_exp_initialized;
+	Clip current_audio;
+	AudioInputStream audio_input_stream;
+	TargetDataLine data_line;
+	AudioFormat audio_format;
+	DataLine.Info info;
+	OutputStream audio_output_stream;
+	AudioInputStream recording_input_stream;
+	String wave_name;
+	
 	
 	 // data model objects
 	 
@@ -65,6 +88,7 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 	 Expression current_exp_copy;
 	 String current_image;
 	 int  preset_image_index;
+	 
 	
 	
 	public PresetEditor(TalkBoxConfigurationApp tbca) 
@@ -152,6 +176,28 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		save_changes = new JButton("save changes to preset");
 		preset_editor.add(save_changes);
 		save_changes.addActionListener(this);
+		wave_name = "test7.wav";
+		
+		audio_format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED , 44100, 16, 2, 4, 44100, false);
+		
+		info = new DataLine.Info(TargetDataLine.class,audio_format);
+		try
+		{
+			data_line = (TargetDataLine) AudioSystem.getLine(info);
+			data_line.open(audio_format);
+			audio_output_stream = new FileOutputStream("Test2.wav");
+			
+		} 
+		
+		catch (LineUnavailableException e) 
+		{
+			e.printStackTrace();
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		data_line.isOpen();
 		
 		// data model initialization
 		current_preset = null;
@@ -160,7 +206,6 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		
 		preset_list_index = -1;
 		set_component_sizes();
-		
 		
 		
 		
@@ -352,6 +397,78 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 				}
 		}
 		
+		if(e.getSource() == play_audio)
+		{
+			play_audio_action();
+		}
+		if (e.getSource() == record_audio)
+		{
+			record_audio_action();
+		}
+		
+	}
+
+	private void record_audio_action()
+	{
+		if(current_exp != null)
+			{boolean timer_on = true;
+			long start_time = System.currentTimeMillis();
+			data_line.start();
+			recording_input_stream = new AudioInputStream(data_line);
+			File wav_file = new File(wave_name);
+		
+			while(timer_on)
+			{
+			
+			
+			
+		    
+				try 
+				{
+					AudioSystem.write(recording_input_stream, AudioFileFormat.Type.WAVE, wav_file);
+				} 
+				catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+				System.out.println("success");
+			
+				if (((System.currentTimeMillis() - start_time) / 1000) > 6)
+				{
+					timer_on = false;
+					data_line.stop();
+				}
+			
+			}
+			System.out.print("Sucess");
+		
+			try 
+			{
+				audio_input_stream = AudioSystem.getAudioInputStream(new File (wave_name));
+				current_audio = AudioSystem.getClip();
+				current_audio.open(audio_input_stream);
+			} 
+		
+		
+			catch (UnsupportedAudioFileException | IOException e) 
+			{
+				e.printStackTrace();
+			}
+		
+			catch (LineUnavailableException e)
+			{
+				e.printStackTrace();
+			}
+		
+		}
+	}
+
+	private void play_audio_action()
+	{
+		if (current_exp != null)
+			{
+			current_audio.start();
+			}
 		
 	}
 
@@ -413,7 +530,26 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 			current_image = current_exp.GetIconPath();
 			current_exp_copy = current_exp;
 			exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
+			
+			try 
+			{
+				audio_input_stream = AudioSystem.getAudioInputStream(new File (wave_name));
+				current_audio = AudioSystem.getClip();
+				current_audio.open(audio_input_stream);
+			} 
+			
+			
+			catch (UnsupportedAudioFileException | IOException e) 
+			{
+				e.printStackTrace();
+			}
+			
+			catch (LineUnavailableException e)
+			{
+				e.printStackTrace();
+			}
 		}
+		
 		
 	}
 
@@ -662,7 +798,23 @@ public class PresetEditor implements ActionListener, ListSelectionListener
 		current_exp = exp;
 		current_image = current_exp.GetIconPath();
 		exp_pic.setIcon(new ImageIcon(current_exp.GetIconPath()));
-		System.out.println("success");
+		try 
+		{
+			audio_input_stream = AudioSystem.getAudioInputStream(new File (exp.GetAudioPath()));
+			current_audio = AudioSystem.getClip();
+			current_audio.open(audio_input_stream);
+		} 
+		
+		
+		catch (UnsupportedAudioFileException | IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		catch (LineUnavailableException e)
+		{
+			e.printStackTrace();
+		}
 		
 	}
 	
