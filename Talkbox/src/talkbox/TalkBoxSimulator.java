@@ -29,18 +29,19 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 	private Path filePath;
 
 	public static void main(String[] args) {
+		// choosing input .tbc file
 		boolean filechosen = false;
 		JFileChooser chooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
 				"TalkBox Configuration Files", "tbc");
-		chooser.setFileFilter(filter);
+		chooser.setFileFilter(filter); // filtering for only .tbc files
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			filechosen = true;
 			System.out.println("You chose to open this file: " +
 					chooser.getSelectedFile().getName());
 		}
-		if (filechosen == true) {
+		if (filechosen == true) { // loads in the .tbc file to the simulator
 			TalkBoxSimulator simDemo = new TalkBoxSimulator(chooser.getSelectedFile().getName());
 			simDemo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		}
@@ -63,28 +64,35 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 			c.printStackTrace();
 			return;
 		}
-		// creating images for each audio button
+		// preliminary setups
 		Container container = getContentPane();
+		
 		deck = new JPanel();
+		
 		cardManager = new CardLayout();
+		
 		deck.setLayout(cardManager);
-
-
+		
+		audioFiles = tbdo.getAudioFileNames();
+		
 		filePath = tbdo.getRelativePathToAudioFiles();
+		
 		JButton[][] controls = new JButton[tbdo.getNumberOfAudioSets()][tbdo.getNumberOfAudioButtons()];
+		
 		presets = tbdo.getPresetNames();
+		
 		int numToggles = tbdo.getTotalNumberOfButtons() - tbdo.getNumberOfAudioButtons();
-
+		
 		if (tbdo.getNumberOfAudioSets() - numToggles > 0) {
 			morePresetsThanToggles = true;
 		} else {
 			morePresetsThanToggles = false;
 		}
-		// toggles
+		
+		// toggle setups, only valid for more than 1 preset
 		if (tbdo.getNumberOfAudioSets() > 1) {
 			if (morePresetsThanToggles == true) {
 				JPanel togglePanel = new JPanel();
-
 				togglePanel.setLayout(new GridLayout(numToggles, 1));
 				toggles = new JButton[numToggles];
 				lastToggle = numToggles - 1;
@@ -101,7 +109,6 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 				container.add(togglePanel, BorderLayout.EAST);
 			} else {
 				JPanel togglePanel = new JPanel();
-
 				togglePanel.setLayout(new GridLayout(numToggles, 1));
 				toggles = new JButton[numToggles];
 				lastToggle = numToggles - 1;
@@ -114,12 +121,9 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 				container.add(togglePanel, BorderLayout.EAST);
 			}
 		}
-
-
-		audioFiles = tbdo.getAudioFileNames();
 		
-
-		if (tbdo.getNumberOfAudioSets() > 1) { // multiple preset button setup
+		// icon and audio button setup for more than 1 preset
+		if (tbdo.getNumberOfAudioSets() > 1) {
 			JPanel[] cards = new JPanel[50];
 			for (int i = 0; i < tbdo.getNumberOfAudioSets(); i++) {
 				cards[i] = new JPanel();
@@ -147,10 +151,8 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 			}
 			container.add(deck);
 		} else {
-
 			// creating audio buttons for just 1 preset
 			JPanel sim = new JPanel();
-
 			sim.setLayout(new GridLayout(2, tbdo.getNumberOfAudioButtons()));
 			System.out.println("2 by " + tbdo.getNumberOfAudioButtons());
 			icons = new JLabel[tbdo.getNumberOfAudioButtons()];
@@ -184,7 +186,8 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 		this.setVisible(true);
 
 	}
-
+	
+	// audio playing function
 	public void playSound(String clipName) {
 		try {
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(clipName).getAbsoluteFile());
@@ -196,12 +199,11 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 		}
 	}
 
-	// replace .mp3 files with whatever sound file is appropriate
+	// action handling for toggles
 	public void actionPerformed(ActionEvent event) {
 		if (presets.length > 1) {
 			if (morePresetsThanToggles == true) {
 				if (event.getSource() == toggles[lastToggle]) {
-
 					cardManager.next(deck);
 					if (++activePreset >= presets.length) {
 						activePreset = 0;
@@ -215,7 +217,6 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 						}
 					}
 				}
-
 			} else if (morePresetsThanToggles == false) {
 				for (int i = 0; i < toggles.length; i++) {
 					if (event.getSource() == toggles[i]) {
