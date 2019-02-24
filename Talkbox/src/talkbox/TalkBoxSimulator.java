@@ -97,8 +97,7 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 				toggles = new JButton[numToggles];
 				lastToggle = numToggles - 1;
 				for (int a = 0; a < numToggles - 1; a++) {
-					int temp = a + 1;
-					toggles[a] = new JButton("Preset " + temp);
+					toggles[a] = new JButton(presets[a]);
 					toggles[a].addActionListener(this);
 					togglePanel.add(toggles[a]);
 				}
@@ -113,8 +112,7 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 				toggles = new JButton[numToggles];
 				lastToggle = numToggles - 1;
 				for (int b = 0; b < numToggles; b++) {
-					int temp = b + 1;
-					toggles[b] = new JButton("Preset " + temp);
+					toggles[b] = new JButton(presets[b]);
 					toggles[b].addActionListener(this);
 					togglePanel.add(toggles[b]);
 				}
