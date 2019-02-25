@@ -4,11 +4,15 @@ import java.util.*;
 public class Toggle {
 	
 	private boolean QuickToggle;
+	private Preset OnePre;
 	private ArrayList<Preset> swapThru;
+	
 	//private int expressionNum;
 	
-	public Toggle()
+	public Toggle(Preset inPre)
 	{
+		QuickToggle = true;
+		OnePre = inPre;
 	}
 	public Toggle(ArrayList<Preset> presets)
 	{
@@ -33,18 +37,20 @@ public class Toggle {
 	public void MakeQuickToggle()
 	{
 		QuickToggle = true;
-		for(int i = 1; i < swapThru.size(); i++) 
-		{
-			swapThru.remove(i);
-		}
+		OnePre = swapThru.get(0);
+		swapThru.clear();
+		
 	}
+	/**
+	 * Note this adds all presets given to it. It does not check to see if the toggle 
+	 * already contains the preset
+	 * @param inPresets
+	 */
 	public void MakeFullToggle(ArrayList<Preset> inPresets)
 	{
 		QuickToggle = false;
-		for(Preset p : inPresets)
-		{
-			swapThru.add(p);	
-		}
+		swapThru.add(OnePre);
+		swapThru.addAll(inPresets);
 	}
 	public String GetToggleType()
 	{
