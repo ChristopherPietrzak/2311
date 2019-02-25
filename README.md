@@ -3,7 +3,7 @@ TalkBox is a device that helps anybody, who is unable to talk or communicate. Ea
 
 Two executable programs are included which are detailed below.
 
-1. TalkBox Simulator - used in place of an actual raspberry pi in order to simulate what the hardware would look like.
+1. **TalkBox Simulator** - used in place of an actual raspberry pi in order to simulate what the hardware would look like.
 
 * A piece of software that simulates the behaviour of any TalkBox device.
 
@@ -13,7 +13,7 @@ Two executable programs are included which are detailed below.
 
 * Is fully tested to behave as the hardware device.
 
-2. TalkBox Configuration app
+2. **TalkBox Configuration app**
 
 * A user-friendly GUI-based app that allows for the configuration of a TalkBox device with appropriate audio.
 
