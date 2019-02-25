@@ -133,7 +133,7 @@ public class TalkBoxSimulator extends JFrame implements ActionListener, TalkBoxC
 				}
 
 				controls[i] = new JButton[tbdo.getNumberOfAudioButtons()];
-				for (int counter = 0; counter < controls.length; counter++) {
+				for (int counter = 0; counter < controls[i].length; counter++) {
 					System.out.println(counter);
 					controls[i][counter] = new JButton(tbdo.getLabels()[i][counter]);
 					final int fcounter = counter;
