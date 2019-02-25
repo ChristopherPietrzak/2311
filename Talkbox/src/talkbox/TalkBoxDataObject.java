@@ -1,75 +1,62 @@
 package talkbox;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.*;
 
-public class TalkBoxDataObject implements TalkBoxConfiguration {
+public class TalkBoxDataObject implements java.io.Serializable, TalkBoxConfiguration {
 
-	
-
-
-
-
-
-	public 	TalkBoxDataObject(int num_audio_buttons, int num_audio_sets, int total_num_buttons , Path rel_path , String [][] file_names_audio, String[][] file_names_icon) 
-
-	{ 
-	
-	n_a_b = num_audio_buttons;
-	n_a_s = num_audio_sets;
-	t_n_b = total_num_buttons;
-	path = rel_path;
-	names_audio = file_names_audio;
-	names_icon = file_names_icon;
-	
-	
-		
-		
+	public TalkBoxDataObject(int num_audio_buttons, int num_audio_sets, int total_num_buttons , 
+			String file_path , String[][] file_names_audio, String[][] file_names_icon, String[][] button_labels,
+			String[] presetN) { 
+		n_a_b = num_audio_buttons;
+		n_a_s = num_audio_sets;
+		t_n_b = total_num_buttons;
+		fpath = file_path;
+		names_audio = file_names_audio;
+		names_icon = file_names_icon;	
+		labels = button_labels;
+		presetNames = presetN;
 	}
-	
+
 	private int n_a_b;
 	private int n_a_s;
 	private int t_n_b;
-	private Path path;
+	private String fpath;
 	private String [][] names_audio;
 	private String [][] names_icon;
-	
-	
-	
-	
-	
-	@Override
+	private String [][] labels;
+	private String[] presetNames;
+
 	public int getNumberOfAudioButtons() {
-		// TODO Auto-generated method stub
 		return n_a_b;
 	}
 
-	@Override
 	public int getNumberOfAudioSets() {
-		// TODO Auto-generated method stub
 		return n_a_s;
 	}
 
-	@Override
 	public int getTotalNumberOfButtons() {
-		// TODO Auto-generated method stub
 		return t_n_b;
 	}
 
-	@Override
 	public Path getRelativePathToAudioFiles() {
-		// TODO Auto-generated method stub
-		return path;
+		return Paths.get(fpath);
 	}
 
-	@Override
 	public String[][] getAudioFileNames() {
-		// TODO Auto-generated method stub
 		return names_audio;
 	}
 
-		
 	public String[][] getIconFileNames() {
-		// TODO Auto-generated method stub
 		return names_icon;
+	}
+	
+	public String[][] getLabels() {
+		return labels;
+	}
+	
+	public String[] getPresetNames() {
+		return presetNames;
 	}
 }

@@ -5,29 +5,24 @@ import java.nio.file.Paths;
 public class DataObjMaker {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+
+		String [][] audio_array = {{"I'm feeling happy.wav","I'm feeling sad.wav"},
+				{"I'm feeling angry.wav", "I'm feeling bored.wav"}};
+		String [][] icon_array = {{"happy.png", "sad.png"}, {"angry.png", "bored.png"}};
+		String [][] label_array = {{"Happy", "Sad"}, {"Angry", "Bored"}};
+		String[] preset_array = {"Emotions1", "Emotions2"};
+
+		TalkBoxDataObject temp_obj = new TalkBoxDataObject(2,2,4, "", audio_array, icon_array, label_array, preset_array);
 
 		try {
-		
-		String [][] audio_array = {{"I'm feeling angry.wav","I'm feeling bored.wav","I'm feeling happy.wav"}};
-		String [][] icon_array = {{"angry.png", "bored.png", "happy.png"}};
-		
-		
-		
-		TalkBoxDataObject temp_obj = new TalkBoxDataObject(3,1,6, Paths.get(""), audio_array, icon_array );
-		
-		FileOutputStream output_file = new FileOutputStream("DataObject.tbc");
-		ObjectOutputStream output_obj = new ObjectOutputStream(output_file);
-		output_obj.writeObject(temp_obj);
-		output_obj.close();
-		output_file.close();
-		System.out.println("Success");
-			}
-		
-		catch (IOException exce)
-		{
-			
-			System.out.println("output file exception triggered");
+			FileOutputStream fileOut = new FileOutputStream("talkbox.tbc");
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(temp_obj);
+			out.close();
+			fileOut.close();
+			System.out.printf("Serialized data is saved successfully");
+		} catch (IOException i) {
+			i.printStackTrace();
 		}
 	}
 }
