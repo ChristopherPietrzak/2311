@@ -1,5 +1,8 @@
 package talkbox;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.swing.*;
 import java.util.*;
 //import javax.sound.sampled.AudioInputStream;
@@ -53,17 +56,22 @@ public class Expression {
 	{
 		try 
 		{
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("I'm Feeling Angry.wav").getAbsoluteFile());
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("audioFile").getAbsoluteFile());
 			Clip clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
+			
 		}
 		catch(Exception e) 
 		{
 			if(e.getClass() == UnsupportedAudioFileException.class)
-				System.out.println("unsupported audio file");
+				System.out.println("Unsupported audio file");
+			if(e.getClass() == IOException.class)
+				System.out.println("IOException");
+			if(e.getClass() == LineUnavailableException.class)
+				System.out.println("line unavailable");
 			else
-				System.out.println("Clip error");
+				System.out.println("Unspecified error");
 		}
 	}
 	

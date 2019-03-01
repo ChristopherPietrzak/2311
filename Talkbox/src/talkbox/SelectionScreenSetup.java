@@ -1,56 +1,61 @@
 package talkbox;
-
 import java.awt.*;
-//import java.awt.color.ColorSpace;
-//import java.awt.event.*;
+import java.text.NumberFormat;
+import java.awt.color.ColorSpace;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.text.NumberFormatter;
+
 import java.util.*;
 
-
-public class SelectionScreenSetup {
+public class SelectionScreenSetup implements ActionListener , ListSelectionListener, ChangeListener, ComponentListener
+{
 	
 	//Jpanels
-	private JPanel selection_screen; 
+	private JPanel selectionScreen; 
 
 	//SelectionScreen visual Components
 
-	DefaultListModel<String> preset_library_list;
-
-	DefaultListModel<String> active_preset_names;
-	JList<String> j_preset_library;
-	JList<String> j_active_presets;
-	JScrollPane j_p_preset_library;
-	JScrollPane j_p_active_presets;
-	JButton preset_add;
-	JButton preset_remove;
-	JButton preset_create;
-	private JSpinner spinner;
+	JScrollPane toggleList = new JScrollPane();
+	JList<Integer> toggleNumbers = new JList<Integer>();
+	DefaultListModel<String> preset_library_list = new DefaultListModel<String>();
+	DefaultListModel<String> active_preset_names = new DefaultListModel<String>();		
+	JList<String> j_preset_library = new JList<String>(preset_library_list);
+	JList<String> j_active_presets = new JList<String>(active_preset_names);
+	JScrollPane j_p_preset_library = new JScrollPane(j_preset_library);
+	JScrollPane j_p_active_presets = new JScrollPane(j_active_presets);
+	private JButton preset_add;
+	private JButton preset_remove;
+	private JButton preset_create;
+	private JFormattedTextField toggleNum;
+	//private JSpinner spinner;
 	ArrayList<JButton> activeButtons = new ArrayList<JButton>();	
-	JLabel pre_lib = new JLabel("Preset Library");
-	JLabel act_pre = new JLabel("Active Presets");
-	JLabel toggle_label = new JLabel("Toggle Buttons");
+	private JLabel pre_lib = new JLabel("Preset Library");
+	private JLabel act_pre = new JLabel("Active Presets");
+	private JLabel toggle_label = new JLabel("Toggle Buttons");
 	
 	//SelectionScreen Nonvisual Components
-	TalkBoxConfigurationApp talkBox;
-	DefaultListModel<Preset> preset_library;
-	DefaultListModel<Preset> active_presets;
+	private TalkBoxConfigurationApp talkBox;
+	DefaultListModel<Preset> preset_library = new DefaultListModel<Preset>();
+	DefaultListModel<Preset> active_presets = new DefaultListModel<Preset>();
 	int selection_index;
 	int remove_index;
 	ArrayList<Expression> newButtons;
 	GridBagLayout editor_layout;
-	Rectangle windowSize = new Rectangle(talkBox.getBounds());
+	//Rectangle windowSize;
 	
 	public SelectionScreenSetup(TalkBoxConfigurationApp tbca)
 	{
-		
-	selection_screen = new JPanel();
+	
+	selectionScreen = new JPanel(null);
 	talkBox = tbca;
+	
     
-	preset_library = new DefaultListModel<Preset>();
-    active_presets = new DefaultListModel<Preset>();
-    preset_library_list = new DefaultListModel<String>();
-    active_preset_names = new DefaultListModel<String>();		
+	//preset_library = new DefaultListModel<Preset>();
+    //active_presets = new DefaultListModel<Preset>();
+    //preset_library_list = new DefaultListModel<String>();
+    //active_preset_names = new DefaultListModel<String>();		
 	
     if(preset_library.size() <= 0)
     {  	
@@ -98,101 +103,120 @@ public class SelectionScreenSetup {
     } 
     
   //used for controlling the files and named sections of the jscroller
-    j_preset_library = new JList<String>(preset_library_list);
- 	j_active_presets = new JList<String>(active_preset_names);
- 	j_p_preset_library = new JScrollPane(j_preset_library);
- 	j_p_active_presets = new JScrollPane(j_active_presets);
+    //j_preset_library = new JList<String>(preset_library_list);
+ 	//j_active_presets = new JList<String>(active_preset_names);
+ 	//j_p_preset_library = new JScrollPane(j_preset_library);
+ 	//j_p_active_presets = new JScrollPane(j_active_presets);
     
-	selection_screen.setLayout(null);
+	selectionScreen.setLayout(null);
 	
-	selection_screen.add(j_p_preset_library);
-	selection_screen.add(j_p_active_presets);
-	selection_screen.setSize(talkBox.window_width, talkBox.window_height);
+	
+	selectionScreen.add(toggleList);
+	//toggleList.se;
+	
+	selectionScreen.add(j_p_preset_library);
+	selectionScreen.add(j_p_active_presets);
+	//selectionScreen.setSize(talkBox.window_width, talkBox.window_height);
 	
 	j_preset_library.setFont(new Font("Arial", Font.PLAIN, 30));
 	j_active_presets.setFont(new Font("Arial", Font.PLAIN, 30));
 	preset_add = new JButton("Add Preset");
 	preset_remove = new JButton("Remove Preset");
 	preset_create = new JButton("Create Preset");	
-	selection_screen.add(preset_add);
-	selection_screen.add(preset_remove);
-	selection_screen.add(preset_create); 	
+	selectionScreen.add(preset_add);
+	selectionScreen.add(preset_remove);
+	selectionScreen.add(preset_create); 	
 	
 	preset_add.setFont(new Font("Ariel", Font.BOLD, 35));
 	preset_remove.setFont(new Font ("Ariel", Font.BOLD, 35));
 	preset_create.setFont(new Font("Ariel", Font.BOLD, 35));
-	preset_add.addActionListener(talkBox);
-	preset_remove.addActionListener(talkBox);
-	preset_create.addActionListener(talkBox);
+	preset_add.addActionListener(this);
+	preset_remove.addActionListener(this);
+	preset_create.addActionListener(this);
 	
-	j_preset_library.addListSelectionListener(talkBox);
-	j_active_presets.addListSelectionListener(talkBox);
+	j_preset_library.addListSelectionListener(this);
+	j_active_presets.addListSelectionListener(this);
 	pre_lib.setFont(new Font("Ariel", Font.PLAIN, 40));
 	act_pre.setFont(new Font("Ariel", Font.PLAIN, 40));
-	selection_screen.add(pre_lib);
-	selection_screen.add(act_pre);
+	selectionScreen.add(pre_lib);
+	selectionScreen.add(act_pre);
 
 	toggle_label.setFont(new Font("Ariel", Font.PLAIN, 28));
-	selection_screen.add(toggle_label);
+	selectionScreen.add(toggle_label);
 	
-	String[] num = {"1","2","3","4","5","6","7","8","9","10"};
-	SpinnerListModel numberList = new SpinnerListModel(num);
-	spinner = new JSpinner(numberList);
-	spinner.setName("Toggles");
+	toggleNum = new JFormattedTextField();
 	
-	spinner.setFont(new Font("Ariel", Font.PLAIN, 40));
-	spinner.addChangeListener(talkBox);
-	selection_screen.add(spinner);
+	NumberFormat format = NumberFormat.getInstance();
+    NumberFormatter formatter = new NumberFormatter(format);
+    formatter.setValueClass(Integer.class);
+    formatter.setMinimum(0);
+    formatter.setMaximum(Integer.MAX_VALUE);
+    formatter.setAllowsInvalid(false);
+    formatter.setCommitsOnValidEdit(true);
+    
+	toggleNum.setFont(new Font("Ariel", Font.PLAIN, 40));
+	toggleNum.setName("Toggles");
+	toggleNum.addActionListener(this);
+	//toggleNum.addInputMethodListener(this);
+	selectionScreen.add(toggleNum);
 	
 	putComponents();
-	talkBox.getContentPane().add(selection_screen);
+	talkBox.getContentPane().add(selectionScreen);
 	
-	updateTBCA();
 	}
-	/**
-	 * updates the information in the selectionscreen to the information in the TBCA if changes have been made.
-	 */
-	public void updateSS()
+	private int gridX(int x)
+ 	{
+		double ratio  = ((double) x) / ((double) 2000);
+		Rectangle windowSize = new Rectangle (talkBox.getBounds());
+		double xPosition = ratio * ((double) windowSize.getWidth());
+		return ((int) xPosition);
+	}
+	private int gridY(int y)
 	{
-		this.preset_library = talkBox.preset_library;
-		this.preset_library_list = talkBox.preset_library_list;
-		this.active_presets = talkBox.active_presets;
-		this.active_preset_names = talkBox.active_preset_names;
-		this.j_preset_library = talkBox.j_preset_library;
-		this.j_active_presets = talkBox.j_active_presets;
-		this.j_p_preset_library = talkBox.j_p_preset_library;
-		this.j_p_active_presets = talkBox.j_p_active_presets;
-		this.preset_add = talkBox.preset_add;
-		this.preset_remove = talkBox.preset_remove;
-		this.preset_create = talkBox.preset_create;
-		this.selection_index = talkBox.selection_index;
-		this.remove_index = talkBox.remove_index;
-		this.activeButtons = talkBox.activeButtons;
-		this.newButtons = talkBox.newButtons;
-		this.editor_layout = talkBox.editor_layout;
-		
+		double ratio  = ((double) y) / ((double) 1000);
+		Rectangle windowSize = new Rectangle (talkBox.getBounds());
+		double yPosition = ratio * ((double) windowSize.getHeight());  
+		return ((int) yPosition);
 	}
+	public void putComponents()
+	{
+		Rectangle windowSize = talkBox.getBounds();
+		selectionScreen.setSize(windowSize.width , windowSize.height);
+		selectionScreen.setLocation(0,0);
+		
+		j_p_preset_library.setSize(gridX(775), gridY(600) );
+		j_p_active_presets.setSize(gridX(775), gridY(600) );
+		j_p_preset_library.setLocation(gridX(0), gridY(0) );
+		j_p_active_presets.setLocation(gridX(1200), gridY(0) );
+		
+		preset_add.setSize( gridX(250) , gridY(125));
+		preset_remove.setSize( gridX(250) , gridY(125) );
+		preset_create.setSize( gridX(250) , gridY(125) );
+		preset_add.setLocation( gridX(863) , gridY(25));
+		preset_remove.setLocation( gridX(863) , gridY(165));
+		preset_create.setLocation( gridX(863) , gridY(310));
+		
+		pre_lib.setLocation(gridX(0) , gridY(375));
+		act_pre.setLocation(gridX(1200),gridY(375));
+		pre_lib.setSize(gridX(500) ,gridY(500));
+		act_pre.setSize(gridX(500) ,gridY(500));
+		
+		toggle_label.setLocation(gridX(863), gridY(425));
+		toggle_label.setSize(gridX(250),gridY(100));
+		
+		toggleNum.setSize(gridX(250), gridY(100));
+		toggleNum.setLocation(gridX(863),gridY(500));
+		
+		if(activeButtons.isEmpty() == false)
+		{
+			for(JButton Jb : activeButtons)
+			{
+				Jb.setSize((int) (1.7 * gridX(1000)/ activeButtons.size()), gridY(250));
+				Jb.setLocation((gridX(2000) * activeButtons.indexOf(Jb) / activeButtons.size()) , gridY(660));	
+			}
+		}
+		
 	
-	public void updateTBCA()
-	{
-		talkBox.preset_library = this.preset_library;
-		talkBox.preset_library_list = this.preset_library_list;
-		talkBox.active_presets = this.active_presets;
-		talkBox.active_preset_names = this.active_preset_names;
-		talkBox.j_preset_library = this.j_preset_library;
-		talkBox.j_active_presets = this.j_active_presets;
-		talkBox.j_p_preset_library = this.j_p_preset_library;
-		talkBox.j_p_active_presets = this.j_p_active_presets;
-		talkBox.preset_add = this.preset_add;
-		talkBox.preset_remove = this.preset_remove;
-		talkBox.preset_create = this.preset_create;
-		talkBox.selection_index = this.selection_index;
-		talkBox.remove_index = this.remove_index;
-		
-		talkBox.activeButtons = this.activeButtons;
-		talkBox.newButtons = this.newButtons;
-		talkBox.editor_layout = this.editor_layout;
-		
 	}
 	public void preview_panel()
 	{
@@ -201,7 +225,7 @@ public class SelectionScreenSetup {
 		{
 			for(JButton Jb : activeButtons)
 			{
-				selection_screen.remove(Jb);
+				selectionScreen.remove(Jb);
 			}
 			activeButtons.clear();
 		}
@@ -224,56 +248,258 @@ public class SelectionScreenSetup {
 			Jb.setFont(new Font("Ariel", Font.BOLD, 22));
 			activeButtons.add(Jb);
 			
-			Jb.setSize((talkBox.window_width * 5 / (6 * newButtons.size()) ), (talkBox.window_height / 5));
-			Jb.setLocation(((talkBox.window_width + 18100 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (165 + (talkBox.window_height / 2 ) ));
-			Jb.addActionListener(talkBox);
+			//Jb.setSize((talkBox.window_width * 5 / (6 * newButtons.size()) ), (talkBox.window_height / 5));
+			//Jb.setLocation(((talkBox.window_width + 18100 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (165 + (talkBox.window_height / 2 ) ));
 			
-			selection_screen.add(Jb);	
+			Jb.setSize( (int)(0.8 * gridX(2000))/ newButtons.size(), gridY(250));
+			Jb.setLocation( gridX(2000) * newButtons.indexOf(b)  /  newButtons.size()  , gridY(660));
+			Jb.addActionListener(this);
+			
+			selectionScreen.add(Jb);	
 			
 		}
-		selection_screen.updateUI();
-		updateTBCA();
-		
+		selectionScreen.updateUI();
 		}
-	}
-	private int gridX(int x)
- 	{
-		double ratio  = ((double) x) / ((double) 2000);
-		windowSize = new Rectangle (talkBox.getBounds());
-		double xPosition = ratio * ((double) windowSize.getWidth());
-		return ((int) xPosition);
-	}
-	private int gridY(int y)
-	{
-		double ratio  = ((double) y) / ((double) 1000);
-		windowSize = new Rectangle (talkBox.getBounds());
-		double yPosition = ratio * ((double) windowSize.getHeight());  
-		return ((int) yPosition);
-	}
-	private void putComponents()
-	{
-		j_p_preset_library.setSize( gridX(800), gridY(600) );
-		j_p_active_presets.setSize( gridX(800), gridY(600) );
-		j_p_preset_library.setLocation( gridX(0), gridY(0) );
-		j_p_active_presets.setLocation( gridX(1200), gridY(0) );
-		
-		preset_add.setSize( gridX(200) , gridY(200));
-		preset_remove.setSize( gridX(200) , gridY(200) );
-		preset_create.setSize( gridX(200) , gridY(200) );
-		preset_add.setLocation( gridX(500) , gridY(700));
-		preset_remove.setLocation( gridX(500) , gridY(700));
-		preset_create.setLocation( gridX(500) , gridY(700));
-		
-		pre_lib.setLocation( 0 , (talkBox.window_height * 3 / 5 ) );
-		act_pre.setLocation((talkBox.window_width * 3 / 5),( talkBox.window_height * 3 /5));
-		pre_lib.setSize((talkBox.window_width * 2 /5) ,( talkBox.window_height /18) );
-		act_pre.setSize((talkBox.window_width * 2 /5) ,( talkBox.window_height /18) );
-		
-		toggle_label.setLocation((int) (talkBox.window_width * 0.43), (int) (talkBox.window_height * 0.45));
-		toggle_label.setSize((int)(talkBox.window_width * 0.43) ,( talkBox.window_height /18) );
-		
-		spinner.setSize(talkBox.window_width * 1 / 8, talkBox.window_height * 1 / 10);
-		spinner.setLocation((int) (talkBox.window_width * 0.43),( talkBox.window_height * 1 /2));
+		}
+//	@Override
+//	public void stateChanged(ChangeEvent eve)
+//	{
+//		
+//		
+//		if(eve.getSource() == spinner)
+//		{
+//			System.out.println("listener functioning");
+//			int location = Integer.parseInt((String)spinner.getValue());
+//			System.out.println(location);
+//			toggle_select(location);
+//			
+//		}
+//		
+//		
+//	}
 	
+//	@Override
+	//public void inputEvent(InputEvent eve)
+	{
+		//if(eve.getSource() == toggleNum)
+		{
+		//	toggleSelect(toggleNum.input);
+		}
+		
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent eve) { 
+		if (eve.getSource() == preset_add)
+		{
+			preset_add_click();
+		}
+		
+		if (eve.getSource() == preset_remove)
+		{
+			preset_remove_click();
+		}
+		
+		if (eve.getSource() == preset_create)
+		{
+			switch_to_editor_panel();
+		}
+		
+		if (eve.getSource() == toggleNum)
+		{
+			
+			toggleSelect(Integer.parseInt(toggleNum.getText()));
+			
+		}
+		
+		for(int i = 0; i < activeButtons.size(); i++)
+		{
+			if(eve.getSource() == activeButtons.get(i)) 
+			{
+				newButtons.get(i).PlayAudio();			
+			}
+			
+		}
+		
+	
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+
+	
+
+	@Override
+	public void valueChanged(ListSelectionEvent eve)
+	{
+		if (eve.getSource() == j_preset_library)
+		{
+			selection_index = j_preset_library.getSelectedIndex();
+			preview_panel();
+		}
+		
+		if(eve.getSource() == j_active_presets)
+		{
+			remove_index = j_active_presets.getSelectedIndex();
+		}
+	
+		
+				
+	}
+		// TODO Auto-generated method stub	
+	private void preset_add_click() 
+	{
+		// TODO Auto-generated method stub
+	
+		if(selection_index != -1)
+		{
+			if (active_presets.contains(preset_library.get(selection_index)) == false)
+			{	
+			
+				active_presets.addElement(preset_library.get(selection_index));
+				active_preset_names.addElement(preset_library_list.getElementAt(selection_index));
+			
+			}
+			
+		}
+		
+	}
+	
+	private void preset_remove_click()
+	{
+
+		// TODO Auto-generated method stub
+		if (remove_index != -1)
+		{
+		active_presets.remove(remove_index);
+		active_preset_names.remove(remove_index);
+		}
+	}
+	
+	private void switch_to_editor_panel() 
+	{
+		talkBox.getContentPane().removeAll();
+		//talkBox.getContentPane().preset_editor.resetView();
+		talkBox.getContentPane().add(talkBox.preset_editor.preset_editor_panel());
+		talkBox.getContentPane().repaint();
+		talkBox.getContentPane().revalidate();
+	}
+
+	public void toggleSelect(int toggleNum) throws IndexOutOfBoundsException
+	{
+		int QuickToggles;
+		if (toggleNum <= active_presets.size())
+		{
+			for(QuickToggles = 0; QuickToggles < toggleNum; QuickToggles++)
+			{
+				Toggle Jt = new Toggle(active_presets.getElementAt(QuickToggles));
+				System.out.println(active_presets.getElementAt(QuickToggles));
+				System.out.println("added one preset");
+			}
+			ArrayList<Preset> in = new ArrayList<Preset>();
+			for(int i = QuickToggles; i < active_presets.size(); i++)
+			{
+				in.add(active_presets.getElementAt(i));
+			}
+		}
+		else
+		{
+			//errorPopup();
+			throw new IndexOutOfBoundsException();
+		}
+		
+		
+	}
+	public void errorPopup()
+	{
+		JFrame name = new JFrame();
+		JButton ok = new JButton();
+		ok.addActionListener(this);
+		
+		PopupMenu poppy = new PopupMenu("error");
+		Dialog error = new Dialog(name, "Error");
+		
+		error.setVisible(true);
+		error.add(poppy);
+		error.setBounds(gridX(1000), gridY(500), gridX(400), gridY(200));
+		name.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public JPanel selectionScreenPanel()
+	{
+		return selectionScreen;
+	}
+	
+	/**
+	 * updates the information in the selectionscreen to the information in the TBCA if changes have been made.
+	 */
+//	public void updateSS()
+//	{
+//		this.preset_library = talkBox.preset_library;
+//		this.preset_library_list = talkBox.preset_library_list;
+//		this.active_presets = talkBox.active_presets;
+//		this.active_preset_names = talkBox.active_preset_names;
+//		this.j_preset_library = talkBox.j_preset_library;
+//		this.j_active_presets = talkBox.j_active_presets;
+//		this.j_p_preset_library = talkBox.j_p_preset_library;
+//		this.j_p_active_presets = talkBox.j_p_active_presets;
+//		this.preset_add = talkBox.preset_add;
+//		this.preset_remove = talkBox.preset_remove;
+//		this.preset_create = talkBox.preset_create;
+//		this.selection_index = talkBox.selection_index;
+//		this.remove_index = talkBox.remove_index;
+//		this.activeButtons = talkBox.activeButtons;
+//		this.newButtons = talkBox.newButtons;
+//		this.editor_layout = talkBox.editor_layout;
+//		
+//	}
+//
+//	public void updateTBCA()
+//	{
+//		talkBox.preset_library = this.preset_library;
+//		talkBox.preset_library_list = this.preset_library_list;
+//		talkBox.active_presets = this.active_presets;
+//		talkBox.active_preset_names = this.active_preset_names;
+//		talkBox.j_preset_library = this.j_preset_library;
+//		talkBox.j_active_presets = this.j_active_presets;
+//		talkBox.j_p_preset_library = this.j_p_preset_library;
+//		talkBox.j_p_active_presets = this.j_p_active_presets;
+//		talkBox.preset_add = this.preset_add;
+//		talkBox.preset_remove = this.preset_remove;
+//		talkBox.preset_create = this.preset_create;
+//		talkBox.selection_index = this.selection_index;
+//		talkBox.remove_index = this.remove_index;
+//		
+//		talkBox.activeButtons = this.activeButtons;
+//		talkBox.newButtons = this.newButtons;
+//		talkBox.editor_layout = this.editor_layout;
+//		
+//	}
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void componentMoved(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void componentResized(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void componentShown(ComponentEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
