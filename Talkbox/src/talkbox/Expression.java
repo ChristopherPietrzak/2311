@@ -1,5 +1,6 @@
 package talkbox;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -56,20 +57,34 @@ public class Expression {
 	{
 		try 
 		{
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("audioFile").getAbsoluteFile());
+			AudioInputStream ain = AudioSystem.getAudioInputStream(new File(audioFile).getAbsoluteFile());
+			
 			Clip clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
+			System.out.println(ain.getFormat());
+			AudioFormat F = ain.getFormat();
+			System.out.println(F.getSampleSizeInBits());
+			
+			//the reason this fails on windows is because windows cannot run 24bit audio files which is what all of are .wav files are
+			//mac and linux dont have this problem as they can run 24bit audio files.
+			//ive changed the preset files to 16 bit, but we need to ensure new uploaded files will work, or have a safety.
+			
+			clip.open(ain);
 			clip.start();
+			ain.close();
+			wait(100);
+			//clip.close();
 			
 		}
 		catch(Exception e) 
 		{
 			if(e.getClass() == UnsupportedAudioFileException.class)
 				System.out.println("Unsupported audio file");
-			if(e.getClass() == IOException.class)
+			else if(e.getClass() == IOException.class)
 				System.out.println("IOException");
-			if(e.getClass() == LineUnavailableException.class)
-				System.out.println("line unavailable");
+			else if(e.getClass() == LineUnavailableException.class)
+				System.out.println("Line Unavailable");
+			else if(e.getClass() == FileNotFoundException.class)
+				System.out.println("No such file, FNFE");
 			else
 				System.out.println("Unspecified error");
 		}

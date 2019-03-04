@@ -43,6 +43,7 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
 	int remove_index;
 	ArrayList<Expression> newButtons;
 	GridBagLayout editor_layout;
+	DefaultListModel<Toggle> toggleLib = new DefaultListModel<Toggle>();
 	//Rectangle windowSize;
 	
 	public SelectionScreenSetup(TalkBoxConfigurationApp tbca)
@@ -61,11 +62,11 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
     {  	
     	// in the actual version, values will be in a file and not hard coded
     	Preset emotions = new Preset(5, "Emotions");
-    	emotions.AddButton("angry", "I'm feeling angry.wav", "angry.png");
-    	emotions.AddButton("bored", "I'm feeling bored.wav", "bored.png");
-    	emotions.AddButton("exited", "I'm feeling excited.wav", "excited.png");
-    	emotions.AddButton("happy", "I'm feeling happy.wav", "happy.png");
-    	emotions.AddButton("sad", "I'm feeling sad.wav", "sad.png");
+    	emotions.AddButton("angry", "Im_Feeling_Angry.wav", "angry.png");
+    	emotions.AddButton("bored", "Im_Feeling_Bored.wav", "bored.png");
+    	emotions.AddButton("exited", "Im_Feeling_Excited.wav", "excited.png");
+    	emotions.AddButton("happy", "Im_Feeling_Happy.wav", "happy.png");
+    	emotions.AddButton("sad", "Im_Feeling_Sad.wav", "sad.png");
     
     	Preset weather = new Preset(6, "Weather");
     	
@@ -211,8 +212,8 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
 		{
 			for(JButton Jb : activeButtons)
 			{
-				Jb.setSize((int) (1.7 * gridX(1000)/ activeButtons.size()), gridY(250));
-				Jb.setLocation((gridX(2000) * activeButtons.indexOf(Jb) / activeButtons.size()) , gridY(660));	
+				Jb.setSize( (int)(0.8 * gridX(2000)) / activeButtons.size(), gridY(250));
+				Jb.setLocation( (int) (gridX(2000) * 0.05 / activeButtons.size()) + (gridX(2000) * activeButtons.indexOf(Jb)/  activeButtons.size() ) , gridY(660) );	
 			}
 		}
 		
@@ -251,8 +252,10 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
 			//Jb.setSize((talkBox.window_width * 5 / (6 * newButtons.size()) ), (talkBox.window_height / 5));
 			//Jb.setLocation(((talkBox.window_width + 18100 * newButtons.indexOf(b)) / (12 * newButtons.size())) , (165 + (talkBox.window_height / 2 ) ));
 			
-			Jb.setSize( (int)(0.8 * gridX(2000))/ newButtons.size(), gridY(250));
-			Jb.setLocation( gridX(2000) * newButtons.indexOf(b)  /  newButtons.size()  , gridY(660));
+			Jb.setSize( (int)(0.8 * gridX(2000)) / newButtons.size(), gridY(250));
+			Jb.setLocation( (int) (gridX(2000) * 0.05 / newButtons.size()) + (gridX(2000) * newButtons.indexOf(b)/  newButtons.size() ) , gridY(660) );
+			
+			
 			Jb.addActionListener(this);
 			
 			selectionScreen.add(Jb);	
@@ -307,9 +310,7 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
 		
 		if (eve.getSource() == toggleNum)
 		{
-			
 			toggleSelect(Integer.parseInt(toggleNum.getText()));
-			
 		}
 		
 		for(int i = 0; i < activeButtons.size(); i++)
@@ -396,12 +397,18 @@ public class SelectionScreenSetup implements ActionListener , ListSelectionListe
 				Toggle Jt = new Toggle(active_presets.getElementAt(QuickToggles));
 				System.out.println(active_presets.getElementAt(QuickToggles));
 				System.out.println("added one preset");
+				toggleLib.addElement(Jt);
 			}
+			
 			ArrayList<Preset> in = new ArrayList<Preset>();
+			
 			for(int i = QuickToggles; i < active_presets.size(); i++)
 			{
 				in.add(active_presets.getElementAt(i));
 			}
+			Toggle FJt = new Toggle(in);
+			toggleLib.addElement(FJt);
+			
 		}
 		else
 		{

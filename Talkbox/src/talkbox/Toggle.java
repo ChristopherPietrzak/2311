@@ -41,16 +41,19 @@ public class Toggle {
 		swapThru.clear();
 		
 	}
-	/**
-	 * Note this adds all presets given to it. It does not check to see if the toggle 
-	 * already contains the preset
-	 * @param inPresets
-	 */
+
 	public void MakeFullToggle(ArrayList<Preset> inPresets)
 	{
 		QuickToggle = false;
 		swapThru.add(OnePre);
-		swapThru.addAll(inPresets);
+		for(Preset p : inPresets)
+		{
+			if(p != OnePre)
+			{
+				swapThru.add(p);
+			}
+			
+		}
 	}
 	public String GetToggleType()
 	{
